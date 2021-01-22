@@ -4,6 +4,14 @@
     https://api.github.com/users/<your name>
 */
 
+axios.get('https://api.github.com/users/victoriatrac')
+  .then( response => {
+    cardMaker(response.data);
+  })
+  .catch( error => {
+    console.log('error:', error)
+  })
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -28,7 +36,23 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell"
+];
+
+followersArray.forEach( item => {
+  axios.get('https://api.github.com/users/' + item)
+  .then( response => {
+    cardMaker(response.data);
+  })
+  .catch( error => {
+    console.log('error:', error)
+  })
+})
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +73,61 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function cardMaker(obj) {
+  const dynamicDiv = document.createElement('div');
+  dynamicDiv.className = 'card';
+
+  const img = document.createElement('img');
+  img.src = obj.avatar_url;
+  
+  const cardInfo = document.createElement('div');
+  cardInfo.className = 'card-info';
+
+  const irlName = document.createElement('h3');
+  irlName.className = 'name';
+  irlName.textContent = obj.name;
+
+  const handle = document.createElement('p');
+  handle.className = 'username';
+  handle.textContent = obj.login;
+
+  const location = document.createElement('p');
+  location.innerHTML = 'Location: ' + obj.location;
+
+  const profile = document.createElement('p');
+  profile.innerHTML = 'Profile: <a href="' + obj.html_url + '">' + obj.html_url + '</a>';
+
+  const followers = document.createElement('p');
+  followers.innerHTML = 'Followers: ' + obj.followers;
+
+  const following = document.createElement('p');
+  following.innerHTML = 'Following: ' + obj.following;
+  
+  const twitter = document.createElement('p');
+  twitter.innerHTML = 'Twitter: @' + obj.twitter_username;
+
+  const website = document.createElement('p');
+  website.innerHTML = 'Website: ' + obj.blog;  
+
+  const bio = document.createElement('p');
+  bio.textContent = 'Bio: ' + obj.bio;
+
+  dynamicDiv.appendChild(img);
+  cardInfo.appendChild(irlName);
+  cardInfo.appendChild(handle);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(twitter);
+  cardInfo.appendChild(website);
+  cardInfo.appendChild(bio);
+  dynamicDiv.appendChild(cardInfo);
+  document.querySelector('.cards').appendChild(dynamicDiv);
+
+  return dynamicDiv;
+}
 
 /*
   List of LS Instructors Github username's:
